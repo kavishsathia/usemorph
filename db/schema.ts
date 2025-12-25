@@ -50,9 +50,11 @@ export const chats = pgTable("chats", {
   userId: uuid("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  moduleId: uuid("module_id")
-    .notNull()
-    .references(() => modules.id, { onDelete: "cascade" }),
+  moduleId: uuid("module_id").references(() => modules.id, {
+    onDelete: "cascade",
+  }),
+  settings: jsonb("settings"),
+  summary: text("summary"),
   title: text("title"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

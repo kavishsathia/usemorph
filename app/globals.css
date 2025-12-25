@@ -9,8 +9,8 @@
   --color-morph-panel: #121212;
   --color-morph-border: #27272A;
   --color-morph-white: #F4F4F5;
-  --color-morph-blue: #2563EB;
-  --color-morph-blueDim: #1D4ED8;
+  --color-morph-blue: #3B82F6;
+  --color-morph-blueDim: #2563EB;
 }
 
 body {
@@ -38,5 +38,5 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2563EB;
+  background: #3B82F6;
 }
