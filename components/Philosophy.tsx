@@ -19,35 +19,35 @@ const Philosophy: React.FC = () => {
           </motion.h2>
           
           <div className="flex flex-col justify-end">
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
               className="text-xl text-morph-white/70 max-w-xl leading-relaxed"
             >
-              Conventional AI feeds you the destination. Morph hands you the map and the compass. True understanding only emerges from the struggle of exploration.
+              Most AI tutors just give you the answer. Morph guides you to find it yourself through questions and interactive simulations.
             </motion.p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 border-t border-morph-border">
-          <FeatureCard 
+          <FeatureCard
             icon={<Brain className="w-8 h-8" />}
-            title="Cognitive Friction"
-            description="We intentionally introduce complexity. You don't learn when it's easy. You learn when you have to bridge the gap."
+            title="Socratic Method"
+            description="Instead of giving answers, Morph asks the right questions to help you think through problems step by step."
             index={1}
           />
-          <FeatureCard 
+          <FeatureCard
             icon={<Pickaxe className="w-8 h-8" />}
-            title="Tool Construction"
-            description="Morph generates bespoke utilities for your specific problem space, allowing you to manipulate variables directly."
+            title="Interactive Simulations"
+            description="Explore concepts hands-on with custom-built tools and visualizations tailored to what you're learning."
             index={2}
           />
-          <FeatureCard 
+          <FeatureCard
             icon={<Zap className="w-8 h-8" />}
-            title="Active Synthesis"
-            description="Knowledge is not retrieved; it is synthesized. Our Socratic engine ensures you own every conclusion you reach."
+            title="Deeper Understanding"
+            description="When you discover an answer yourself, you actually remember it. Morph makes sure learning sticks."
             index={3}
           />
         </div>

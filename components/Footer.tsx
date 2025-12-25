@@ -18,9 +18,8 @@ const Footer: React.FC = () => {
             <a href="#" className="hover:text-morph-blue transition-colors">DISCORD</a>
           </div>
           <p className="text-morph-white/30 text-xs max-w-xs ml-auto">
-            © 2024 Morph Systems. <br/>
-            Engineered for active intelligence. <br/>
-            All passive observers will be terminated.
+            © 2025 Morph. <br/>
+            Learn by doing, not by reading.
           </p>
         </div>
 

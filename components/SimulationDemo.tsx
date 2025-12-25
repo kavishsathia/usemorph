@@ -7,16 +7,16 @@ const SimulationDemo: React.FC = () => {
 
   // Simulated conversation flow
   const conversation = [
-    { type: "user", text: "Explain quantum superposition to me." },
+    { type: "user", text: "Can you explain quantum superposition?" },
     {
       type: "ai",
-      text: "I cannot explain it directly. But I can let you observe it. Generating the Double-Slit Environment...",
+      text: "Instead of explaining, let me show you. I'm setting up a double-slit experiment...",
     },
-    { type: "system", text: ">> INITIALIZING PHOTON EMITTER..." },
-    { type: "system", text: ">> MOUNTING DETECTOR PLATE..." },
+    { type: "system", text: "Building simulation..." },
+    { type: "system", text: "Ready" },
     {
       type: "ai",
-      text: "The emitter is ready. Fire a single photon and tell me where it lands.",
+      text: "Try firing a single photon and observe where it lands. What do you notice?",
     },
   ];
 
@@ -34,12 +34,10 @@ const SimulationDemo: React.FC = () => {
         <div className="p-12 border border-morph-border border-b-0 lg:border-b lg:border-r-0 bg-morph-black relative">
           <div className="absolute top-0 left-0 bg-morph-blue w-2 h-2"></div>
           <h3 className="font-display text-4xl text-morph-white mb-6 tracking-tighter">
-            THE MEDIATOR <br /> INTERFACE
+            How it works
           </h3>
           <p className="text-morph-white/60 mb-8 max-w-md">
-            Morph doesn't chat. It builds. When you ask a question, it
-            constructs a micro-simulation allowing you to test hypotheses in
-            real-time.
+            Ask a question, and Morph builds an interactive simulation so you can explore the concept yourself rather than just reading about it.
           </p>
           <div className="flex gap-4">
             <div className="flex items-center gap-2 text-xs font-mono text-morph-blue uppercase">
@@ -57,7 +55,7 @@ const SimulationDemo: React.FC = () => {
         <div className="bg-morph-panel border border-morph-border p-8 min-h-[500px] flex flex-col font-mono text-sm relative">
           {/* Mock Header */}
           <div className="flex justify-between items-center pb-4 border-b border-morph-border mb-4">
-            <span className="text-morph-white/40">SESSION_ID: 9X-214</span>
+            <span className="text-morph-white/40">Physics Module</span>
             <div className="flex gap-2">
               <div className="w-3 h-3 rounded-full bg-red-500/20"></div>
               <div className="w-3 h-3 rounded-full bg-yellow-500/20"></div>
@@ -87,10 +85,10 @@ const SimulationDemo: React.FC = () => {
                     }`}
                   >
                     {msg.type === "user"
-                      ? "STUDENT"
+                      ? "You"
                       : msg.type === "system"
-                      ? "KERNEL"
-                      : "MORPH"}
+                      ? "System"
+                      : "Morph"}
                   </span>
                   <p className="text-morph-white leading-relaxed">{msg.text}</p>
                 </motion.div>

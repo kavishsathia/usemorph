@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import Link from 'next/link';
 
 const Hero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -38,12 +39,12 @@ const Hero: React.FC = () => {
             className="space-y-8"
           >
             <p className="text-morph-white/80 text-lg leading-relaxed text-balance">
-              Morph is an intelligent mediator. It does not provide answers. It constructs simulations, tools, and environments for you to discover the truth yourself.
+              Morph is an AI tutor that doesn't give you answers. It asks questions, builds simulations, and guides you to discover concepts yourself.
             </p>
-            
-            <button className="group relative overflow-hidden bg-morph-white text-morph-black px-8 py-4 font-display font-bold text-lg tracking-tight hover:bg-morph-blue hover:text-white transition-colors duration-300">
-              <span className="relative z-10">INITIALIZE SEQUENCE</span>
-            </button>
+
+            <Link href="/login" className="inline-block bg-morph-white text-morph-black px-8 py-4 font-display font-bold text-lg tracking-tight hover:bg-morph-blue hover:text-white transition-colors duration-300">
+              Get access
+            </Link>
           </motion.div>
         </div>
       </motion.div>
