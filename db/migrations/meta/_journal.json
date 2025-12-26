@@ -15,6 +15,13 @@
       "when": 1766653583629,
       "tag": "0001_past_puma",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1766664299183,
+      "tag": "0002_brown_wrecking_crew",
+      "breakpoints": true
     }
   ]
 }

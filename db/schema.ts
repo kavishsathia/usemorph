@@ -5,6 +5,7 @@ import {
   timestamp,
   jsonb,
   pgEnum,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
@@ -78,8 +79,11 @@ export const windows = pgTable("windows", {
   eventId: uuid("event_id").references(() => events.id, {
     onDelete: "set null",
   }),
+  windowTag: text("window_tag").notNull(),
   srcdoc: text("srcdoc").notNull(),
   title: text("title"),
+  isMinimised: boolean("is_minimised").notNull().default(false),
+  isClosed: boolean("is_closed").notNull().default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
