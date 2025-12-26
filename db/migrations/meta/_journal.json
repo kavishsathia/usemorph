@@ -22,6 +22,13 @@
       "when": 1766664299183,
       "tag": "0002_brown_wrecking_crew",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1766716508407,
+      "tag": "0003_mixed_cable",
+      "breakpoints": true
     }
   ]
 }

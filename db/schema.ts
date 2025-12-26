@@ -6,6 +6,7 @@ import {
   jsonb,
   pgEnum,
   boolean,
+  integer,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
@@ -82,6 +83,10 @@ export const windows = pgTable("windows", {
   windowTag: text("window_tag").notNull(),
   srcdoc: text("srcdoc").notNull(),
   title: text("title"),
+  posX: integer("pos_x").notNull().default(50),
+  posY: integer("pos_y").notNull().default(50),
+  width: integer("width").notNull().default(500),
+  height: integer("height").notNull().default(400),
   isMinimised: boolean("is_minimised").notNull().default(false),
   isClosed: boolean("is_closed").notNull().default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),

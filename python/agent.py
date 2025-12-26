@@ -187,7 +187,7 @@ def create_agent(contract: Contract, settings: dict, chat_id: str, module: Optio
         description="A tutoring agent that creates interactive simulations to help students learn through exploration.",
         contract=contract,
         instruction=build_system_instruction(settings, module),
-        model="gemini-2.0-flash",
+        model="gemini-3-flash-preview",
         tools=tools.get_tools(),
         on_tool_call=lambda tool_call: send_event(
             chat_id=chat_id,

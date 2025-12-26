@@ -1,10 +1,12 @@
 "use server";
 
 import { db } from "@/db/index";
-import { eq } from "drizzle-orm";
-import { events, chats } from "@/db/schema";
+import { eq, InferSelectModel } from "drizzle-orm";
+import { events, chats, windows } from "@/db/schema";
 import { createClient } from "@/lib/supabase/server";
 import { runAgentTask } from "@/src/trigger/agent";
+
+type Window = InferSelectModel<typeof windows>;
 
 export async function getEvents(chatId: string) {
   const supabase = await createClient();
@@ -31,10 +33,30 @@ export async function getWindows(chatId: string) {
   if (!user) throw new Error("Unauthorized");
 
   const records = await db.query.windows.findMany({
-    where: eq(events.chatId, chatId),
+    where: eq(windows.chatId, chatId),
   });
 
   return records;
+}
+
+export async function updateWindow(
+  windowId: string,
+  updates: Partial<Window>
+) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) throw new Error("Unauthorized");
+
+  const [updatedWindow] = await db
+    .update(windows)
+    .set(updates)
+    .where(eq(windows.id, windowId))
+    .returning();
+
+  return updatedWindow;
 }
 
 export async function sendMessage(chatId: string, message: string) {
