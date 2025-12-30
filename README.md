@@ -3,12 +3,13 @@
 
   <h3>AI-Powered Socratic Learning Platform</h3>
 
-  ![Next.js](https://img.shields.io/badge/Next.js-16.1.1-black?style=flat&logo=next.js)
-  ![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react)
-  ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat&logo=typescript)
-  ![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat&logo=python)
-  ![Node](https://img.shields.io/badge/Node.js-20+-339933?style=flat&logo=node.js)
-  ![License](https://img.shields.io/badge/License-MIT-green?style=flat)
+![Next.js](https://img.shields.io/badge/Next.js-16.1.1-black?style=flat&logo=next.js)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat&logo=typescript)
+![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat&logo=python)
+![Node](https://img.shields.io/badge/Node.js-20+-339933?style=flat&logo=node.js)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat)
+
 </div>
 
 ---
@@ -16,6 +17,19 @@
 ## Overview
 
 Morph is an educational platform that leverages artificial intelligence to facilitate discovery-based learning through the Socratic method. Rather than providing direct answers, the system guides students through strategic questioning and interactive simulations to develop deep conceptual understanding.
+
+## Hackathon Submission
+
+This project was built for the Google Cloud AI Partner Catalyst Hackathon (Datadog Challenge).
+
+**Key Innovation:** Integration of the Sworn verification framework to ensure AI agent adherence to teaching principles, with comprehensive observability through Datadog.
+
+**Repositories:**
+
+- Application: https://github.com/kavishsathia/usemorph
+- Sworn Framework: https://github.com/kavishsathia/sworn
+
+**Live Demo:** https://usemorph.ai
 
 ## The Problem
 
@@ -42,18 +56,21 @@ Morph addresses this gap by implementing a pedagogically sound approach to AI-as
 ## Technical Architecture
 
 ### Frontend Stack
+
 - Next.js 16 (React 19) with TypeScript
 - Tailwind CSS 4 with custom design system
 - Framer Motion for animations
 - Radix UI component primitives
 
 ### Backend Infrastructure
+
 - Python-based AI agent (Google ADK + Gemini 2.0 Flash)
 - Supabase (PostgreSQL with real-time subscriptions)
 - Drizzle ORM for type-safe database access
 - Trigger.dev for background task orchestration
 
 ### AI & Observability
+
 - Sworn framework for agent commitment monitoring
 - Datadog LLM observability
 - Custom evaluation runbooks
@@ -82,11 +99,13 @@ cd usemorph
 **2. Install Dependencies**
 
 Frontend dependencies:
+
 ```bash
 npm install
 ```
 
 Python agent dependencies:
+
 ```bash
 cd python
 python -m venv venv
@@ -117,6 +136,7 @@ DD_SITE=datadoghq.com
 ```
 
 **Configuration Sources:**
+
 - **Supabase**: Project Settings → API at [supabase.com](https://supabase.com)
 - **Trigger.dev**: Project dashboard at [trigger.dev](https://trigger.dev)
 - **Google AI**: API key from [Google AI Studio](https://aistudio.google.com/apikey)
@@ -131,6 +151,7 @@ npm run db:push
 ```
 
 This creates the required database schema:
+
 - `users` - User authentication and profiles
 - `chats` - Learning session metadata
 - `events` - Conversation history and tool invocations
@@ -140,11 +161,13 @@ This creates the required database schema:
 **5. Start Development Environment**
 
 Terminal 1 - Next.js development server:
+
 ```bash
 npm run dev
 ```
 
 Terminal 2 - Trigger.dev orchestration:
+
 ```bash
 npx trigger.dev dev
 ```
@@ -238,6 +261,74 @@ usemorph/
 
 ---
 
+## Observability & Monitoring
+
+### Monitoring Strategy
+
+Morph uses Datadog to monitor application health and AI agent behavior through:
+
+1. **LLM Observability**: Token usage, latency, and cost per interaction
+2. **Agent Verification**: Sworn framework commitments tracked in real-time
+3. **User Experience**: Success rates and error patterns
+
+### Detection Rules
+
+Six detection rules monitor critical system signals:
+
+**1. Socratic Questioning Verification**
+Alerts when the AI provides direct answers instead of using guiding questions. Ensures core pedagogical principle adherence.
+
+**2. Challenge Level Verification**
+Monitors whether challenge difficulty appropriately matches student knowledge level. Prevents content that is too easy or too difficult.
+
+**3. Goal Commitment Verification**
+Ensures the AI guides students toward learning goals through active discovery rather than passive instruction.
+
+**4. Hint Frequency Verification**
+Tracks whether hints are provided at the right frequency - after reasonable student attempts, not immediately or too late.
+
+**5. Pacing Verification**
+Monitors conversation pacing to ensure balanced explanations and student input without overwhelming or under-engaging students.
+
+**6. High Response Latency**
+Alerts when response times exceed 15 seconds (warning) or 20 seconds (critical), indicating potential infrastructure or API issues.
+
+All monitors trigger at 70% pass rate (critical) and 80% pass rate (warning) for evaluation-based rules.
+
+### Service Level Objectives
+
+Three SLOs define system reliability targets:
+
+**1. Latency SLO**
+Target: 95% of requests complete within acceptable response time thresholds.
+
+**2. Error Rate SLO**
+Target: Maintain error rates below defined thresholds to ensure consistent user experience.
+
+**3. Cost Efficiency SLO**
+Target: Monitor token usage and API costs to ensure sustainable operation.
+
+### Datadog Configuration
+
+All monitoring configurations are available in `/datadog/`:
+
+- `dashboard.json` - Application health dashboard
+- `monitors/` - Detection rule definitions
+- `slos/` - Service level objective configurations
+
+### Running the Traffic Generator
+
+To demonstrate the monitoring system in action:
+
+```bash
+cd python
+python traffic_generator.py
+```
+
+This generates various interaction patterns that trigger detection rules and create incidents in Datadog.
+
+---
+
 ## Contributing
 
 This project is currently maintained as a research initiative. Contributions, suggestions, and forks are welcome for educational and experimental purposes.
@@ -253,6 +344,7 @@ MIT License
 ## Acknowledgments
 
 Built with:
+
 - [Google ADK](https://github.com/google/adk) - Agent Development Kit
 - [Sworn](https://github.com/anthropics/sworn) - Agent behavior verification framework
 - [Supabase](https://supabase.com) - Backend infrastructure
