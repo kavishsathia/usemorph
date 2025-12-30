@@ -1,0 +1,49 @@
+{
+  "id": 17344679,
+  "name": "[Morph] Challenge Level Verification - Low Pass Rate",
+  "type": "llm-observability alert",
+  "query": "formula(\"query / query1\").last(\"5m\") < 0.7",
+  "message": "ALERT: Morph AI Tutor - Challenge Level Verification Quality Degraded\n\nStatus: {{#is_alert}}CRITICAL - Pass rate below 70%{{/is_alert}}{{#is_warning}}WARNING - Pass rate below 80%{{/is_warning}}\n\nCurrent Pass Rate: {{value}} ({{value}} × 100%)\nAlert Threshold: < 0.7 (70%)\nWarning Threshold: < 0.8 (80%)\n\nImpact:\n- AI tutor not adapting challenge difficulty appropriately to student knowledge level\n- - Students may receive content that is too easy or too difficult\n- - Degraded personalized learning experience\n- - Risk of student disengagement\n\nEvaluation Details:\nThis monitor tracks the Challenge_Level_Verifier evaluation which ensures the AI agent aligns challenge difficulty with the student's knowledge level (balanced challenge level).\n\nImmediate Actions:\n1. Review recent traces where Challenge_Level_Verifier failed\n2. 2. Analyze if prompt changes affected challenge level adaptation logic\n3. 3. Check if specific student knowledge levels trigger failures\n4. 4. Verify Vertex AI model performance and response quality\n5. 5. Review evaluation criteria for potential calibration issues\n\nRunbook: https://github.com/kavishsathia/usemorph/wiki/Challenge-Level-Evaluation-Runbook\n\nRelated Resources:\n- LLM Observability Dashboard: https://us5.datadoghq.com/llm\n- - Evaluation Trace Examples: {{trace_link}}\n\n{{#is_recovery}}RESOLVED: Challenge Level Verification pass rate has recovered to {{value}}{{/is_recovery}}@incident-",
+  "tags": ["application:morph", "monitor-type:evaluation"],
+  "options": {
+    "thresholds": {
+      "critical": 0.7,
+      "warning": 0.8
+    },
+    "enable_logs_sample": false,
+    "notify_audit": false,
+    "on_missing_data": "default",
+    "include_tags": false,
+    "variables": [
+      {
+        "data_source": "llm_observability",
+        "name": "query",
+        "indexes": ["llmobs"],
+        "compute": {
+          "aggregation": "count"
+        },
+        "group_by": [],
+        "search": {
+          "query": "@event_type:span @ml_app:acf @evaluations.custom.Challenge_Level_Verifier:*"
+        },
+        "storage": "hot"
+      },
+      {
+        "data_source": "llm_observability",
+        "name": "query1",
+        "indexes": ["*"],
+        "compute": {
+          "aggregation": "count"
+        },
+        "group_by": [],
+        "search": {
+          "query": "@event_type:span @ml_app:acf @parent_id:undefined"
+        }
+      }
+    ],
+    "new_host_delay": 300,
+    "groupby_simple_monitor": false
+  },
+  "priority": 2,
+  "draft_status": "published"
+}

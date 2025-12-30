@@ -1,0 +1,22 @@
+{
+  "id": 17344533,
+  "name": "[Morph] High Response Latency Detected",
+  "type": "llm-observability alert",
+  "query": "llm-observability(\"@event_type:span @parent_id:undefined @ml_app:acf\").rollup(\"avg\", \"@duration\").last(\"5m\") > 20",
+  "message": "ALERT: Morph AI Application Experiencing High Latency\n\nStatus: {{#is_alert}}CRITICAL - Response time exceeds 20 seconds{{/is_alert}}{{#is_warning}}WARNING - Response time exceeds 15 seconds{{/is_warning}}\n\nMeasured Latency: {{value}} nanoseconds (approximately {{value}} / 1000000000 seconds)\nAlert Threshold: 20 seconds\nWarning Threshold: 15 seconds\n\nImpact:\n- Students experiencing delayed AI tutor responses\n- - Degraded learning experience\n- - Risk of session timeouts and user frustration\n\nImmediate Actions:\n1. Verify Vertex AI / Gemini API health and response times\n2. 2. Review recent LLM traces in Datadog for bottlenecks\n3. 3. Check if specific evaluation agents (SemanticVerifierAgent) are causing delays\n4. 4. Investigate rate limiting, quota exhaustion, or network issues\n5. 5. Review recent code deployments or prompt changes\n\nRunbook: https://github.com/kavishsathia/usemorph/wiki/High-Latency-Runbook\n\nRelated Resources:\n- LLM Observability Dashboard: https://us5.datadoghq.com/llm\n- - Trace Link: {{trace_link}}\n\n{{#is_recovery}}RESOLVED: Latency has returned to normal levels ({{value}} nanoseconds){{/is_recovery}}@incident-",
+  "tags": ["application:morph", "monitor-type:latency"],
+  "options": {
+    "thresholds": {
+      "critical": 20,
+      "warning": 15
+    },
+    "enable_logs_sample": false,
+    "notify_audit": false,
+    "on_missing_data": "default",
+    "include_tags": false,
+    "new_host_delay": 300,
+    "groupby_simple_monitor": false
+  },
+  "priority": 2,
+  "draft_status": "published"
+}

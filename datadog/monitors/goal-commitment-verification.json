@@ -1,0 +1,49 @@
+{
+  "id": 17344763,
+  "name": "[Morph] Goal Commitment Verification - Low Pass Rate",
+  "type": "llm-observability alert",
+  "query": "formula(\"query2 / query3\").last(\"5m\") < 0.7",
+  "message": "ALERT: Morph AI Tutor - Goal Commitment Verification Quality Degraded\\n\\nStatus: {{#is_alert}}CRITICAL - Pass rate below 70%{{/is_alert}}{{#is_warning}}WARNING - Pass rate below 80%{{/is_warning}}\\n\\nCurrent Pass Rate: {{value}} ({{value}} × 100%)\\nAlert Threshold: < 0.7 (70%)\\nWarning Threshold: < 0.8 (80%)\\n\\nImpact:\\n- AI tutor not guiding students toward achieving learning goals effectively\\n- Students not building knowledge incrementally through guided discovery\\n- Degraded personalized learning experience\\n- Risk of student disengagement\\n\\nEvaluation Details:\\nThis monitor tracks the Goal_Commitment evaluation which ensures the AI agent guides students toward achieving learning goals through active learning and guided discovery.\\n\\nImmediate Actions:\\n1. Review recent traces where Goal_Commitment failed\\n2. Analyze if prompt changes affected goal commitment logic\\n3. Check if specific student knowledge levels trigger failures\\n4. Verify Vertex AI model performance and response quality\\n5. Review evaluation criteria for potential calibration issues\\n\\nRunbook: https://github.com/kavishsathia/usemorph/wiki/Goal-Commitment-Evaluation-Runbook\\n\\nRelated Resources:\\n- LLM Observability Dashboard: https://us5.datadoghq.com/llm\\n- Evaluation Trace Examples: {{trace_link}}\\n\\n{{#is_recovery}}RESOLVED: Goal Commitment Verification pass rate has recovered to {{value}}{{/is_recovery}}@incident-",
+  "tags": ["application:morph", "monitor-type:evaluation"],
+  "options": {
+    "thresholds": {
+      "critical": 0.7,
+      "warning": 0.8
+    },
+    "enable_logs_sample": false,
+    "notify_audit": false,
+    "on_missing_data": "default",
+    "include_tags": false,
+    "variables": [
+      {
+        "data_source": "llm_observability",
+        "name": "query2",
+        "indexes": ["*"],
+        "compute": {
+          "aggregation": "count"
+        },
+        "group_by": [],
+        "search": {
+          "query": "@event_type:span @ml_app:acf @evaluations.custom.Goal_Commitment:pass"
+        },
+        "storage": "hot"
+      },
+      {
+        "data_source": "llm_observability",
+        "name": "query3",
+        "indexes": ["*"],
+        "compute": {
+          "aggregation": "count"
+        },
+        "group_by": [],
+        "search": {
+          "query": "@event_type:span @ml_app:acf @parent_id:undefined"
+        }
+      }
+    ],
+    "new_host_delay": 300,
+    "groupby_simple_monitor": false
+  },
+  "priority": 2,
+  "draft_status": "published"
+}

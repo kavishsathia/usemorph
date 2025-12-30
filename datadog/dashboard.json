@@ -1,0 +1,132 @@
+{
+  "title": "Morph AI Tutor - Application Health & Observability",
+  "description": null,
+  "widgets": [
+    {
+      "id": 5060241969088566,
+      "definition": {
+        "title": "Detection Rules Status - Morph Monitors",
+        "type": "manage_status",
+        "display_format": "countsAndList",
+        "color_preference": "background",
+        "hide_zero_counts": true,
+        "show_status": true,
+        "last_triggered_format": "relative",
+        "query": "[Morph]",
+        "sort": "status,asc",
+        "count": 50,
+        "start": 0,
+        "summary_type": "monitors",
+        "show_priority": false,
+        "show_last_triggered": false
+      },
+      "layout": { "x": 0, "y": 0, "width": 4, "height": 4 }
+    },
+    {
+      "id": 2857481549833284,
+      "definition": {
+        "title": "SLO List",
+        "title_size": "16",
+        "title_align": "left",
+        "requests": [
+          {
+            "request_type": "slo_list",
+            "query": { "query_string": "", "limit": 100 }
+          }
+        ],
+        "type": "slo_list"
+      },
+      "layout": { "x": 4, "y": 0, "width": 8, "height": 4 }
+    },
+    {
+      "id": 534870273873249,
+      "definition": {
+        "title": "Summary",
+        "type": "trace_service",
+        "env": "development",
+        "service": "observable-agent",
+        "span_name": "google_adk.request",
+        "show_hits": true,
+        "show_errors": true,
+        "show_latency": true,
+        "show_breakdown": true,
+        "show_distribution": true,
+        "show_resource_list": false,
+        "size_format": "medium",
+        "display_format": "two_column"
+      },
+      "layout": { "x": 0, "y": 4, "width": 6, "height": 6 }
+    },
+    {
+      "id": 1295369752953407,
+      "definition": {
+        "title": "Total Estimated Cost",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "auto",
+        "legend_columns": ["avg", "min", "max", "value", "sum"],
+        "type": "timeseries",
+        "requests": [
+          {
+            "response_format": "timeseries",
+            "queries": [
+              {
+                "name": "query1",
+                "data_source": "metrics",
+                "query": "sum:ml_obs.span.llm.total.cost{*}.as_count()"
+              }
+            ],
+            "formulas": [{ "formula": "query1" }],
+            "style": {
+              "palette": "dog_classic",
+              "order_by": "values",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ]
+      },
+      "layout": { "x": 6, "y": 4, "width": 6, "height": 3 }
+    },
+    {
+      "id": 248707037168341,
+      "definition": {
+        "title": "Total Tokens",
+        "title_size": "16",
+        "title_align": "left",
+        "show_legend": true,
+        "legend_layout": "auto",
+        "legend_columns": ["avg", "min", "max", "value", "sum"],
+        "type": "timeseries",
+        "requests": [
+          {
+            "response_format": "timeseries",
+            "queries": [
+              {
+                "name": "query1",
+                "data_source": "metrics",
+                "query": "avg:ml_obs.span.llm.total.tokens{*}"
+              }
+            ],
+            "formulas": [{ "formula": "query1" }],
+            "style": {
+              "palette": "dog_classic",
+              "order_by": "values",
+              "line_type": "solid",
+              "line_width": "normal"
+            },
+            "display_type": "line"
+          }
+        ]
+      },
+      "layout": { "x": 6, "y": 7, "width": 6, "height": 3 }
+    }
+  ],
+  "template_variables": [],
+  "layout_type": "ordered",
+  "notify_list": [],
+  "reflow_type": "fixed",
+  "pause_auto_refresh": false
+}
