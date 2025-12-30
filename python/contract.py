@@ -1,4 +1,4 @@
-from observable_agent import Contract, Commitment, IntermediateVerificationResult
+from sworn import Contract, Commitment, DatadogObservability
 
 
 def create_socratic_commitment() -> Commitment:
@@ -51,8 +51,7 @@ Ensure that the tutoring pace matches the user's preference of '{pace}' pace.
 - For 'slow' pace, provide detailed explanations and frequent checks for understanding.
 - For 'medium' pace, balance explanations with opportunities for student input.
 - For 'fast' pace, focus on key concepts and encourage independent thinking.
-        """,
-        verifier=lambda execution, terms: len(execution.tool_calls) < 5
+        """
     )
 
 
@@ -115,21 +114,15 @@ def create_time_limit_commitment(time_limit: str) -> Commitment:
         terms=f"""
             Ensure that the tutoring session respects the time limit of {time_limit} minutes set by the user.
         """,
-        semantic_sampling_rate=0,
-        verifier=lambda execution, terms: (
-            # do later with database
-            IntermediateVerificationResult(
-                status="skipped",
-                expected=f"Session duration should be within {time_limit} minutes.",
-                actual=f"Session duration was {time_limit} minutes.",
-            )
-        )
-
+        semantic_sampling_rate=0
     )
 
 
-def create_contract(settings: dict) -> Contract:
-    contract = Contract(commitments=[create_socratic_commitment()])
+def create_contract(settings: dict, observer: DatadogObservability) -> Contract:
+    contract = Contract(
+        observer=observer,
+        commitments=[create_socratic_commitment()]
+    )
 
     if settings.get("pace"):
         contract.commitments.append(create_pacing_commitment(settings["pace"]))

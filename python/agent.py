@@ -1,10 +1,11 @@
-from observable_agent import ObservableAgent, Contract
-from typing import Any, Dict, Optional
-from event import send_event
-from tools import Tools
+from google.adk.agents import Agent
 from google.adk.agents.callback_context import CallbackContext
 from google.adk.tools.tool_context import ToolContext
 from google.adk.tools.base_tool import BaseTool
+from sworn import Contract, ToolCall
+from typing import Any, Dict, Optional
+from event import send_event
+from tools import create_tools
 
 
 def build_system_instruction(settings: dict, module: Optional[str] = None) -> str:
@@ -180,27 +181,25 @@ Do NOT create windows for:
 """
 
 
-def create_agent(contract: Contract, settings: dict, chat_id: str, module: Optional[str] = None) -> ObservableAgent:
-    tools = Tools(chat_id)
-    agent = ObservableAgent(
-        name="morph",
-        description="A tutoring agent that creates interactive simulations to help students learn through exploration.",
-        contract=contract,
-        instruction=build_system_instruction(settings, module),
-        model="gemini-3-flash-preview",
-        tools=tools.get_tools(),
-        on_tool_call=lambda tool_call: send_event(
-            chat_id=chat_id,
-            event_type="tool_result",
-            message=f"{tool_call.tool.name}",
-            metadata={"args": tool_call.args, "result": tool_call.tool_response})
-    )
+def create_agent(settings: dict, chat_id: str, contract: Contract, execution, module: Optional[str] = None) -> Agent:
+    tools = create_tools(chat_id, contract)
 
     def after_model_callback(callback_context: CallbackContext, llm_response):
         if llm_response.content and llm_response.content.parts:
             part = llm_response.content.parts[0]
             if hasattr(part, 'text') and part.text:
                 print("Agent response:", part.text)
+
+                # Track model response as actuator in sworn
+                execution.add_tool_call(ToolCall(
+                    tool_name="model_response",
+                    function="actuator",
+                    args={"message": part.text},
+                    tool_context=None,
+                    tool_response=part.text,
+                    error=None
+                ))
+
                 send_event(
                     chat_id=chat_id,
                     event_type="model_response",
@@ -217,7 +216,20 @@ def create_agent(contract: Contract, settings: dict, chat_id: str, module: Optio
             metadata={"args": args}
         )
 
-    agent.after_model_callback = after_model_callback
-    agent.before_tool_callback = before_tool_callback
+    def after_agent_callback(callback_context: CallbackContext):
+        results = execution.verify()
+        print("Verification results:", results)
+
+    agent = Agent(
+        name="morph",
+        description="A tutoring agent that creates interactive simulations to help students learn through exploration.",
+        instruction=build_system_instruction(
+            settings, module) + contract.get_terms(),
+        model="gemini-2.0-flash",
+        tools=tools,
+        after_model_callback=after_model_callback,
+        before_tool_callback=before_tool_callback,
+        after_agent_callback=after_agent_callback,
+    )
 
     return agent

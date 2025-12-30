@@ -1,20 +1,16 @@
-from observable_agent import ObservableAgent
-from typing import TypedDict
 from google.adk import Runner
-from google.genai import types
 from google.adk.sessions import InMemorySessionService
+from google.genai import types
+from sworn import Contract
+from typing import TypedDict
+
+from agent import create_agent
 
 
 class Message(TypedDict):
     event_type: str
     content: str
     metadata: dict
-
-
-class RunResult(TypedDict):
-    response: str
-    verification_passed: bool
-    verification_details: dict
 
 
 def format_history_for_agent(history: list[Message]) -> str:
@@ -36,10 +32,13 @@ def format_history_for_agent(history: list[Message]) -> str:
 
 
 async def run_conversation(
-    agent: ObservableAgent,
+    contract: Contract,
+    settings: dict,
+    chat_id: str,
     message: str,
-    history: list[Message]
-) -> RunResult:
+    history: list[Message],
+    module: str | None = None
+):
     agent_history = format_history_for_agent(history)
 
     session = InMemorySessionService()
@@ -50,15 +49,25 @@ async def run_conversation(
         session_id="session"
     )
 
-    runner = Runner(agent=agent, session_service=session, app_name="agent")
-
     msg = types.Content(role='user', parts=[
         types.Part(text=f"""
                     {agent_history}
                     User: {message}
                     """)])
 
-    async for e in runner.run_async(
-        user_id="user", session_id="session", new_message=msg
-    ):
-        print(e)
+    # Run agent within sworn's execution context
+    with contract.execution() as execution:
+        agent = create_agent(
+            settings=settings,
+            chat_id=chat_id,
+            contract=contract,
+            execution=execution,
+            module=module
+        )
+
+        runner = Runner(agent=agent, session_service=session, app_name="agent")
+
+        async for e in runner.run_async(
+            user_id="user", session_id="session", new_message=msg
+        ):
+            print(e)

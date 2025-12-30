@@ -13,9 +13,14 @@ import json
 from typing import TypedDict
 import asyncio
 from pathlib import Path
+from dotenv import load_dotenv
 
+# Load env vars BEFORE importing sworn (so DD_* vars are set when LLMObs.enable() runs)
+env_path = Path(__file__).parent.parent / ".env.local"
+load_dotenv(env_path)
+
+from sworn import DatadogObservability
 from contract import create_contract
-from agent import create_agent
 from run import run_conversation, Message
 
 
@@ -28,9 +33,7 @@ class TaskInput(TypedDict):
 
 
 class TaskOutput(TypedDict):
-    response: str
-    verification_passed: bool
-    verification_details: dict
+    status: str
     error: str | None
 
 
@@ -56,18 +59,20 @@ async def main() -> None:
     try:
         input_data = parse_input()
 
-        contract = create_contract(input_data["settings"])
-        agent = create_agent(
+        # Create observer for telemetry
+        observer = DatadogObservability()
+
+        # Create contract with commitments
+        contract = create_contract(input_data["settings"], observer)
+
+        # Run conversation (agent created inside with execution context)
+        await run_conversation(
             contract=contract,
             settings=input_data["settings"],
             chat_id=input_data["chatId"],
-            module=input_data.get("module")
-        )
-
-        result = await run_conversation(
-            agent=agent,
             message=input_data["message"],
-            history=input_data["history"]
+            history=input_data["history"],
+            module=input_data.get("module")
         )
 
         output: TaskOutput = {
