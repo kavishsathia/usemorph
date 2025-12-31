@@ -38,17 +38,11 @@ class TaskOutput(TypedDict):
 
 
 def parse_input() -> TaskInput:
-    # Try stdin first (for production/large payloads), fallback to argv (for backwards compatibility)
+    if len(sys.argv) < 2:
+        raise ValueError("No input provided. Usage: python main.py '{...}'")
+
     try:
-        if not sys.stdin.isatty():
-            # Data passed via stdin
-            input_data = sys.stdin.read()
-            data = json.loads(input_data)
-        elif len(sys.argv) >= 2:
-            # Data passed via command line arg
-            data = json.loads(sys.argv[1])
-        else:
-            raise ValueError("No input provided. Usage: python main.py '{...}' or echo '{...}' | python main.py")
+        data = json.loads(sys.argv[1])
     except json.JSONDecodeError as e:
         raise ValueError(f"Invalid JSON input: {e}")
 
