@@ -310,22 +310,116 @@ Target: Monitor token usage and API costs to ensure sustainable operation.
 
 ### Datadog Configuration
 
+**Datadog Organisation Name:** Kavish
+
 All monitoring configurations are available in `/datadog/`:
 
 - `dashboard.json` - Application health dashboard
 - `monitors/` - Detection rule definitions
 - `slos/` - Service level objective configurations
 
-### Running the Traffic Generator
+### Traffic Generator
 
-To demonstrate the monitoring system in action:
+The traffic generator simulates realistic student interactions to demonstrate monitoring capabilities and test agent behavior at scale.
+
+**Features:**
+- 19 multi-turn conversation scenarios
+- 6 student personas with different learning styles
+- 5 traffic patterns from light demo to high-load stress testing
+- Automatic statistics tracking and reporting
+
+**Quick Start:**
 
 ```bash
 cd python
-python traffic_generator.py
+source ../.venv/bin/activate
+python traffic_generator.py demo
 ```
 
-This generates various interaction patterns that trigger detection rules and create incidents in Datadog.
+**Available Commands:**
+
+```bash
+# List all traffic patterns
+python traffic_generator.py list
+
+# View all scenarios
+python traffic_generator.py scenarios
+
+# Run specific pattern
+python traffic_generator.py [pattern]
+
+# Run pattern with filter
+python traffic_generator.py [pattern] [filter]
+```
+
+**Traffic Patterns:**
+
+| Pattern | Conversations | Parallel | Description |
+|---------|--------------|----------|-------------|
+| `demo` | 5 | 1 | Quick demonstration with varied scenarios |
+| `steady` | 20 | 2 | Realistic steady stream of interactions |
+| `burst` | 30 | 5 | Peak usage simulation with parallel requests |
+| `stress` | 50 | 10 | High-load testing for monitoring system |
+| `monitor_test` | 15 | 1 | Sequential testing of monitor triggers |
+
+**Scenario Filters:**
+
+- `passing` - Only scenarios expected to pass all checks
+- `failing` - Only scenarios designed to trigger monitors
+- `phd` - Only PhD-level scenarios (should allow direct answers)
+
+**Examples:**
+
+```bash
+# Run demo pattern (5 conversations)
+python traffic_generator.py demo
+
+# Test monitor triggers specifically
+python traffic_generator.py monitor_test failing
+
+# Simulate steady traffic with only passing scenarios
+python traffic_generator.py steady passing
+
+# Stress test the system
+python traffic_generator.py stress
+```
+
+**Output:**
+
+The generator provides detailed statistics including:
+- Total conversations and turns
+- Success/failure rates
+- Scenario distribution
+- Expected monitor triggers
+- Links to Datadog dashboard for analysis
+
+**Example Output:**
+
+```
+======================================================================
+TRAFFIC GENERATION SUMMARY
+======================================================================
+
+⏱️  Duration: 45.2 seconds
+
+📊 Overall Stats:
+   Total Conversations: 20
+   Total Turns: 58
+   Average Turns/Conversation: 2.9
+   Successful: 18 ✓
+   Failed: 2 ✗
+
+🚨 Expected Monitor Triggers:
+   socratic_questioning: 6 scenarios
+   challenge_level: 4 scenarios
+   pacing: 3 scenarios
+
+💡 Next Steps:
+   1. Check Datadog LLM Observability Dashboard
+   2. Review traces for evaluation results
+   3. Check if monitors triggered as expected
+   4. Visit usemorph.ai/runbooks for investigation guides
+```
 
 ---
 
