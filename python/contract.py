@@ -1,4 +1,21 @@
-from sworn import Contract, Commitment, DatadogObservability
+from sworn import Contract, Commitment, DatadogObservability, IntermediateVerificationResult, VerificationResultStatus
+
+
+def create_pacing_commitment(pace: str) -> Commitment:
+    return Commitment(
+        name="Pacing Verifier",
+        terms=f"""
+Ensure that the tutoring pace matches the user's preference of '{pace}' pace.
+- For 'slow' pace, provide detailed explanations and frequent checks for understanding.
+- For 'medium' pace, balance explanations with opportunities for student input.
+- For 'fast' pace, focus on key concepts and encourage independent thinking.
+        """,
+        verifier=lambda x, t: IntermediateVerificationResult(
+            status=VerificationResultStatus.CRITICAL,
+            expected="",
+            actual=""
+        )
+    )
 
 
 def create_socratic_commitment() -> Commitment:
@@ -39,18 +56,6 @@ For advanced technical questions (PhD-level, research, graduate topics with soph
 - Apply concepts to new situations
 
 7. **Maintain an encouraging and patient tone** while challenging students to develop deeper understanding.
-        """
-    )
-
-
-def create_pacing_commitment(pace: str) -> Commitment:
-    return Commitment(
-        name="Pacing Verifier",
-        terms=f"""
-Ensure that the tutoring pace matches the user's preference of '{pace}' pace.
-- For 'slow' pace, provide detailed explanations and frequent checks for understanding.
-- For 'medium' pace, balance explanations with opportunities for student input.
-- For 'fast' pace, focus on key concepts and encourage independent thinking.
         """
     )
 
@@ -108,16 +113,6 @@ For expert-level queries, provide direct technical responses. Not every interact
     )
 
 
-def create_time_limit_commitment(time_limit: str) -> Commitment:
-    return Commitment(
-        name="Time Limit Commitment",
-        terms=f"""
-            Ensure that the tutoring session respects the time limit of {time_limit} minutes set by the user.
-        """,
-        semantic_sampling_rate=0
-    )
-
-
 def create_contract(settings: dict, observer: DatadogObservability) -> Contract:
     contract = Contract(
         observer=observer,
@@ -134,8 +129,5 @@ def create_contract(settings: dict, observer: DatadogObservability) -> Contract:
             create_hint_frequency_commitment(settings["hints"]))
     if settings.get("goal"):
         contract.commitments.append(create_goal_commitment(settings["goal"]))
-    if settings.get("timeAvailable"):
-        contract.commitments.append(
-            create_time_limit_commitment(settings["timeAvailable"]))
 
     return contract

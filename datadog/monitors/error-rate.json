@@ -1,0 +1,49 @@
+{
+  "id": 17355490,
+  "name": "[Morph] Error Rate - High Failure Rate Detected",
+  "type": "llm-observability alert",
+  "query": "formula(\"query / query1\").last(\"5m\") > 0.1",
+  "message": "ALERT: Morph AI Application - High Error Rate Detected\n\nStatus: \n{{#is_alert}}\n@incident-sev-3\n@kavishwer2301@gmail.com\nCRITICAL - Error rate exceeds 5%\n{{/is_alert}}\n\n{{#is_warning}}\n@incident-sev-4\n@kavishwer2301@gmail.com\nWARNING - Error rate exceeds 2%\n{{/is_warning}}\n\nAlert Threshold: > 5% (Critical)\nWarning Threshold: > 2%\n\nImpact:\n- Students experiencing failed interactions and incomplete responses\n- Degraded application reliability and user trust\n- Potential revenue/engagement loss from abandoned sessions\n- Service availability at risk if error rate continues climbing\n\nTechnical Details:\nThis monitor tracks application and LLM errors including Vertex AI/Gemini API failures (rate limits, timeouts, invalid responses), application exceptions during agent execution, contract verification failures, and tool execution errors.\n\nImmediate Actions:\n1. Check Vertex AI/Gemini API status and quota limits\n2. Review error logs in Datadog for error patterns and stack traces\n3. Identify if errors are concentrated in specific endpoints or operations\n4. Verify recent deployments or configuration changes\n5. Check if specific contract verifiers or tool calls are failing consistently\n6. Monitor infrastructure metrics (CPU, memory) for resource exhaustion\n\nRunbook: https://github.com/kavishsathia/usemorph/wiki/Error-Rate-Runbook\n\nRelated Resources:\n- LLM Observability Dashboard: https://us5.datadoghq.com/llm\n\n{{#is_recovery}}\n@kavishwer2301@gmail.com\nRESOLVED: Error rate has returned to normal levels\n{{/is_recovery}}",
+  "tags": [],
+  "options": {
+    "thresholds": {
+      "critical": 0.1,
+      "warning": 0.05
+    },
+    "enable_logs_sample": false,
+    "notify_audit": false,
+    "on_missing_data": "default",
+    "include_tags": false,
+    "variables": [
+      {
+        "data_source": "llm_observability",
+        "name": "query",
+        "indexes": ["llmobs"],
+        "compute": {
+          "aggregation": "count"
+        },
+        "group_by": [],
+        "search": {
+          "query": "@event_type:span @parent_id:undefined @ml_app:acf @status:error"
+        },
+        "storage": "hot"
+      },
+      {
+        "data_source": "llm_observability",
+        "name": "query1",
+        "indexes": ["llmobs"],
+        "compute": {
+          "aggregation": "count"
+        },
+        "group_by": [],
+        "search": {
+          "query": "@event_type:span @parent_id:undefined @ml_app:acf"
+        }
+      }
+    ],
+    "new_host_delay": 300,
+    "groupby_simple_monitor": false
+  },
+  "priority": 2,
+  "draft_status": "published"
+}

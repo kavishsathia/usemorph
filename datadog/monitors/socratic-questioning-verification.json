@@ -1,9 +1,9 @@
 {
-  "id": 17344782,
-  "name": "[Morph] Pacing Verification - Low Pass Rate",
+  "id": 17344793,
+  "name": "[Morph] Socratic Questioning Verification - Low Pass Rate",
   "type": "llm-observability alert",
-  "query": "formula(\"query6 / query7\").last(\"5m\") < 0.7",
-  "message": "ALERT: Morph AI Tutor - Pacing Verification Quality Degraded\\n\\nStatus: {{#is_alert}}CRITICAL - Pass rate below 70%{{/is_alert}}{{#is_warning}}WARNING - Pass rate below 80%{{/is_warning}}\\n\\nCurrent Pass Rate: {{value}} ({{value}} × 100%)\\nAlert Threshold: < 0.7 (70%)\\nWarning Threshold: < 0.8 (80%)\\n\\nImpact:\\n- AI tutor pacing is inappropriate - either too slow or rushing students\\n- Poor balance between explanations and student input\\n- Students overwhelmed or under-engaged\\n- Degraded learning experience and engagement\\n\\nEvaluation Details:\\nThis monitor tracks the Pacing_Verifier evaluation which ensures explanations are balanced with student input at a moderate pace.\\n\\nImmediate Actions:\\n1. Review recent traces where Pacing_Verifier failed\\n2. Analyze if prompt changes affected pacing logic\\n3. Check if responses are too verbose or too brief\\n4. Verify student interaction opportunities in conversations\\n5. Review evaluation criteria for potential calibration issues\\n\\nRunbook: https://github.com/kavishsathia/usemorph/wiki/Pacing-Evaluation-Runbook\\n\\nRelated Resources:\\n- LLM Observability Dashboard: https://us5.datadoghq.com/llm\\n- Evaluation Trace Examples: {{trace_link}}\\n\\n{{#is_recovery}}RESOLVED: Pacing Verification pass rate has recovered to {{value}}{{/is_recovery}}@incident-",
+  "query": "formula(\"query8 / query9\").last(\"5m\") < 0.7",
+  "message": "ALERT: Morph AI Tutor - Socratic Questioning Verification Quality Degraded\n\nStatus: \n{{#is_alert}}\n@case-morph\n@kavishwer2301@gmail.com\nCRITICAL - Pass rate below 70%\n{{/is_alert}}\n\n{{#is_warning}}\n@case-morph\n@kavishwer2301@gmail.com\nWARNING - Pass rate below 80%\n{{/is_warning}}\n\nAlert Threshold: < 0.7 (70%)\nWarning Threshold: < 0.8 (80%)\n\nImpact:\n- AI tutor defaulting to direct instruction instead of Socratic questioning\n- Students receiving answers rather than guided discovery through targeted questions\n- Critical thinking and problem-solving skills not being developed\n- Core pedagogical principle of the application compromised\n\nEvaluation Details:\nThis monitor tracks the Socratic_Questioning evaluation which ensures the tutor uses leading questions and gentle nudges to guide student understanding rather than providing direct answers.\n\nInvestigation Steps:\n1. Review recent traces where Socratic_Questioning failed\n2. Identify patterns: Are direct answers given for specific question types?\n3. Check if contract terms balance between \"pure Socratic dialogue\" and \"direct instruction\" needs refinement\n4. Analyze if advanced/technical questions are triggering appropriate bypass of Socratic method\n5. Evaluate question quality: Are they truly guiding or just rhetorical?\n\nRunbook: https://github.com/kavishsathia/usemorph/wiki/Socratic-Questioning-Evaluation-Runbook\n\nRelated Resources:\n- LLM Observability Dashboard: https://us5.datadoghq.com/llm\n\n{{#is_recovery}}\n@case-morph\n@kavishwer2301@gmail.com\nRESOLVED: Socratic Questioning Verification pass rate has recovered.\n{{/is_recovery}}",
   "tags": ["application:morph", "monitor-type:evaluation"],
   "options": {
     "thresholds": {
@@ -17,20 +17,20 @@
     "variables": [
       {
         "data_source": "llm_observability",
-        "name": "query6",
+        "name": "query8",
         "indexes": ["*"],
         "compute": {
           "aggregation": "count"
         },
         "group_by": [],
         "search": {
-          "query": "@event_type:span @ml_app:acf @evaluations.custom.Pacing_Verifier:pass"
+          "query": "@event_type:span @ml_app:acf @evaluations.custom.Socratic_Questioning:pass"
         },
         "storage": "hot"
       },
       {
         "data_source": "llm_observability",
-        "name": "query7",
+        "name": "query9",
         "indexes": ["*"],
         "compute": {
           "aggregation": "count"

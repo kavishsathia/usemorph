@@ -75,6 +75,9 @@ async def main() -> None:
             module=input_data.get("module")
         )
 
+        # Give Datadog time to flush telemetry
+        await asyncio.sleep(5)
+
         output: TaskOutput = {
             "status": "success",
             "error": None
