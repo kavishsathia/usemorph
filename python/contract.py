@@ -9,12 +9,7 @@ Ensure that the tutoring pace matches the user's preference of '{pace}' pace.
 - For 'slow' pace, provide detailed explanations and frequent checks for understanding.
 - For 'medium' pace, balance explanations with opportunities for student input.
 - For 'fast' pace, focus on key concepts and encourage independent thinking.
-        """,
-        verifier=lambda x, t: IntermediateVerificationResult(
-            status=VerificationResultStatus.CRITICAL,
-            expected="",
-            actual=""
-        )
+        """
     )
 
 
