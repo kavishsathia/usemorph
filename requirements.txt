@@ -1,0 +1,3 @@
+sworn==0.1.1
+google-adk==1.21.0
+python-dotenv

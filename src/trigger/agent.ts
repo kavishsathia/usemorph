@@ -21,9 +21,10 @@ export const runAgentTask = task({
   run: async (payload: AgentPayload) => {
     logger.log("Running agent", { chatId: payload.chatId });
 
-    const result = await python.runScript("./python/main.py", [
-      JSON.stringify(payload),
-    ]);
+    // Pass payload via stdin to avoid E2BIG error with large conversation histories
+    const result = await python.runScript("./python/main.py", [], {
+      input: JSON.stringify(payload),
+    });
 
     logger.log("Agent completed", { result });
 
